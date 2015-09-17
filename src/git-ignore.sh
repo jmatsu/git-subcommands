@@ -30,14 +30,14 @@ require_one_or_more() {
 
 usage() {
 cat <<HERE
-usage: git ignore                         # list all aliases
-   or: git ignore [-c|--create]           # create .gitignore by fetching from gitignore.io
-   or: git ignore [--append]              # append fetched ignores into existing .gitignore
-   or: git ignore [-a|--add] file...      # add file... to existing .gitignore and remove caches from git fs.
-   or: git ignore [-r|--remove] file...   # remove file...
-   or: git ignore [--has] file            # ask whether the file exists or not
-   or: git ignore [-l|--list]             # show all ignores
-   or: git ignore [-h|--help]             # show me :)
+usage: git ignore                          # list all aliases
+   or: git ignore [-c|--create]            # create .gitignore by fetching from gitignore.io
+   or: git ignore [--append]               # append fetched ignores into existing .gitignore
+   or: git ignore [-a|--add] <file...>     # add file... to existing .gitignore and remove caches from git fs.
+   or: git ignore [-r|--remove] <file...>  # remove file...
+   or: git ignore [--has] <file>           # ask whether the file exists or not
+   or: git ignore [-l|--list]              # show all ignores
+   or: git ignore [-h|--help]              # show me :)
 HERE
 }
 
@@ -139,37 +139,37 @@ has() {
 EXECUTION_COMMAND=
 
 case "$1" in
-    '-c', '--create' )
-        EXECUTION_COMMAND="create"
-        ;;
-    '--append' )
-        EXECUTION_COMMAND="append"
-        ;;
-    '-a', '--add' ) # add ignore
-        EXECUTION_COMMAND="add"
-        require_one_or_more "$2"
-        ;;
-    '-r', '--remove' ) # remove ignore
-        EXECUTION_COMMAND="remove"
-        require_one_or_more "$2"
-        ;;
-    '--has' ) # has specified
-        EXECUTION_COMMAND="has"
-        ;;
-    '-l', '--list' ) # list ignores
-        EXECUTION_COMMAND="list"
-        ;;
-    '-h', '--help' ) # list ignores
-        EXECUTION_COMMAND="usage"
-        ;;
-    -*) # unregistered options
-        error "Unknown option '$1'"
-        ;;
-    *) # arguments which is not option
-        error "Unknown arguments '$1'"
-        ;;
+  '-c', '--create' )
+    EXECUTION_COMMAND="create"
+    ;;
+  '--append' )
+    EXECUTION_COMMAND="append"
+    ;;
+  '-a', '--add' ) # add ignore
+    EXECUTION_COMMAND="add"
+    require_one_or_more "$2"
+    ;;
+  '-r', '--remove' ) # remove ignore
+    EXECUTION_COMMAND="remove"
+    require_one_or_more "$2"
+    ;;
+  '--has' ) # has specified
+    EXECUTION_COMMAND="has"
+    ;;
+  '-l', '--list' ) # list ignores
+    EXECUTION_COMMAND="list"
+    ;;
+  '-h', '--help' ) # list ignores
+    EXECUTION_COMMAND="usage"
+    ;;
+  -*) # unregistered options
+    error "Unknown option '$1'"
+    ;;
+  *) # arguments which is not option
+    error "Unknown arguments '$1'"
+    ;;
 esac
 
 shift 1
 
-eval "${EXECUTION_COMMAND} $@"
+eval "${EXECUTION_COMMAND:-usage} $@"
