@@ -19,6 +19,15 @@ mktemp() {
   \mktemp 2>/dev/null || \mktemp -t tmp
 }
 
+error() {
+  local msg
+  for msg in "$@"; do
+    echo "$msg" 1>&2
+  done
+
+  exit 1
+}
+
 list() {
   list::all
 }
@@ -60,7 +69,7 @@ mergable() {
 EXECUTION_COMMAND=
 EXECUTION_COMMAND_SUFFIX=
 
-case "$1" in
+case "${1:--l}" in
   '-c' | '--current' | 'current' )
     EXECUTION_COMMAND="current"
     ;;
