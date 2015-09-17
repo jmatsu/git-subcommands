@@ -18,7 +18,11 @@ ask() {
 }
 
 error() {
-  echo "$1" 1>&2
+  local msg
+  for msg in "$@"; do
+    echo "$msg" 1>&2
+  done
+
   exit 1
 }
 
@@ -42,22 +46,26 @@ HERE
 }
 
 check_filter_command() {
-  local readonly cmd=$(git config --get ignore.filter 2> /dev/null)
+  local readonly cmd=$(get_filter_command)
   [ -z "${cmd:-}" ] && {
     local msg msg2
     msg="The filter command is not set."
     msg2="Please set by \`git config --add ignore.filter [peco|fzf|...]\`"
-    error "${msg}\n${msg2}
+    error "${msg}" "${msg2}"
   }
 
   if type ${cmd} >/dev/null 2>&1; then
-    echo "${cmd}"
+    :
   else
     local msg msg2
     msg="The filter command '${cmd}' not found."
     msg2="Please set correct one by \`git config --add ignore.filter [peco|fzf|...]\`"
-    error "${msg}\n${msg2}
+    error "${msg}" "${msg2}"
   fi
+}
+
+get_filter_command() {
+  git config --get ignore.filter 2> /dev/null
 }
 
 gitignore_api_call() {
@@ -69,13 +77,18 @@ fetch_gitignore_types() {
 }
 
 fetch_gitignore() {
-  local readonly cmd=$(check_filter_command)
+  check_filter_command
+
+  local readonly cmd=$(get_filter_command)
   local langs
 
   langs=$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")
 
-  while $(echo 'Add another language?'; ask); do
+  echo 'Add another language?'
+  while ask; do
     langs="${langs},$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")"
+
+    echo 'Add another language?'
   done
 
   gitignore_api_call "${langs}"
@@ -138,28 +151,28 @@ has() {
 ## opt-parse
 EXECUTION_COMMAND=
 
-case "$1" in
-  '-c', '--create' )
+case "${1:--l}" in
+  '-c' | '--create' )
     EXECUTION_COMMAND="create"
     ;;
   '--append' )
     EXECUTION_COMMAND="append"
     ;;
-  '-a', '--add' ) # add ignore
+  '-a' | '--add' ) # add ignore
     EXECUTION_COMMAND="add"
     require_one_or_more "$2"
     ;;
-  '-r', '--remove' ) # remove ignore
+  '-r' | '--remove' ) # remove ignore
     EXECUTION_COMMAND="remove"
     require_one_or_more "$2"
     ;;
   '--has' ) # has specified
     EXECUTION_COMMAND="has"
     ;;
-  '-l', '--list' ) # list ignores
+  '-l' | '--list' ) # list ignores
     EXECUTION_COMMAND="list"
     ;;
-  '-h', '--help' ) # list ignores
+  '-h' | '--help' ) # list ignores
     EXECUTION_COMMAND="usage"
     ;;
   -*) # unregistered options
