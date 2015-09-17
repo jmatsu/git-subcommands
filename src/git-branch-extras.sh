@@ -61,17 +61,17 @@ EXECUTION_COMMAND=
 EXECUTION_COMMAND_SUFFIX=
 
 case "$1" in
-  '-c', '--current', 'current' )
+  '-c' | '--current' | 'current' )
     EXECUTION_COMMAND="current"
     ;;
-  '-m', '--mergable', 'mergable' )
+  '-m' | '--mergable' | 'mergable' )
     EXECUTION_COMMAND="mergable"
     ;;
-  '-e', '--exists', 'exists' ) # add ignore
+  '-e' | '--exists' | 'exists' ) # add ignore
     EXECUTION_COMMAND="exists"
     require_one_or_more "$2"
     ;;
-  '-l', '--list' ) # list ignores
+  '-l' | '--list' ) # list ignores
     EXECUTION_COMMAND="list"
     ;;
   '--all' ) # list ignores
@@ -83,7 +83,7 @@ case "$1" in
   '--remote' ) # list ignores
     EXECUTION_COMMAND_SUFFIX="::remote"
     ;;
-  '-h', '--help' ) # list ignores
+  '-h' | '--help' ) # list ignores
     EXECUTION_COMMAND="usage"
     ;;
   -*) # unregistered options
