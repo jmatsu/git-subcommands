@@ -160,11 +160,11 @@ case "${1:--l}" in
     ;;
   '-a' | '--add' ) # add ignore
     EXECUTION_COMMAND="add"
-    require_one_or_more "$2"
+    require_one_or_more "$1" "$2"
     ;;
   '-r' | '--remove' ) # remove ignore
     EXECUTION_COMMAND="remove"
-    require_one_or_more "$2"
+    require_one_or_more "$1" "$2"
     ;;
   '--has' ) # has specified
     EXECUTION_COMMAND="has"
