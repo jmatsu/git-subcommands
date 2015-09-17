@@ -92,6 +92,7 @@ add() {
   local arg
   for arg in "$@"; do
     echo "$arg" >> "$(get_root)/.gitignore"
+    git remove --cached "$arg" > /dev/null 2>&1
   done
 }
 
