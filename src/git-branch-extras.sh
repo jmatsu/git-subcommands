@@ -28,6 +28,12 @@ error() {
   exit 1
 }
 
+require_one_or_more() {
+  if [ -z "$2" ] || [[ "$2" =~ ^-.* ]]; then
+      error "'$1' requires one argument"
+  fi
+}
+
 list() {
   list::all
 }
@@ -78,7 +84,7 @@ case "${1:--l}" in
     ;;
   '-e' | '--exists' | 'exists' ) # add ignore
     EXECUTION_COMMAND="exists"
-    require_one_or_more "$2"
+    require_one_or_more "$1" "$2"
     ;;
   '-l' | '--list' ) # list ignores
     EXECUTION_COMMAND="list"
