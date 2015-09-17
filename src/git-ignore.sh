@@ -4,6 +4,19 @@ mktemp() {
   \mktemp 2>/dev/null || \mktemp -t tmp
 }
 
+ask() {
+  local i
+  select i in Yes No; do
+    if [ -n "$i" ]; then
+      if [ "$i" = "Yes" ]; then
+        return 0
+      else
+        return 1
+      fi
+    fi
+  done
+}
+
 error() {
   echo "$1" 1>&2
   exit 1
@@ -34,19 +47,25 @@ check_filter_command() {
   fi
 }
 
-check_gibo() {
-  if type gibo >/dev/null 2>&1; then
-    :
-  else
-    error "gibo not found."
-  fi
+gitignore_api_call() {
+  curl -L -s "https://www.gitignore.io/api/$1"|tr "," "\n"
+}
+
+fetch_gitignore_types() {
+  gitignore_api_call "list"
 }
 
 fetch_gitignore() {
   local readonly cmd=$(check_filter_command)
-  check_gibo
+  local langs
 
-  gibo -l|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}"|xargs gibo
+  langs=$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")
+
+  while $(echo 'Add another language?'; ask); do
+    langs="${langs},$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")"
+  done
+
+  gitignore_api_call "${langs}"
 }
 
 get_root() {
