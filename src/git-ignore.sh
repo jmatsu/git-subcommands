@@ -28,6 +28,19 @@ require_one_or_more() {
   fi
 }
 
+usage() {
+cat <<HERE
+usage: git ignore                         # list all aliases
+   or: git ignore [-c|--create]           # create .gitignore by fetching from gitignore.io
+   or: git ignore [--append]              # append fetched ignores into existing .gitignore
+   or: git ignore [-a|--add] file...      # add file... to existing .gitignore and remove caches from git fs.
+   or: git ignore [-r|--remove] file...   # remove file...
+   or: git ignore [--has] file            # ask whether the file exists or not
+   or: git ignore [-l|--list]             # show all ignores
+   or: git ignore [-h|--help]             # show me :)
+HERE
+}
+
 check_filter_command() {
   local readonly cmd=$(git config --get ignore.filter 2> /dev/null)
   [ -z "${cmd:-}" ] && {
@@ -145,6 +158,9 @@ case "$1" in
         ;;
     '-l', '--list' ) # list ignores
         EXECUTION_COMMAND="list"
+        ;;
+    '-h', '--help' ) # list ignores
+        EXECUTION_COMMAND="usage"
         ;;
     -*) # unregistered options
         error "Unknown option '$1'"
