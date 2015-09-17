@@ -57,7 +57,7 @@ current() {
 exists() {
   local name="$1"
 
-  [ "${name}" = $(git branch --list "${name}"|sed -e 's/\*//g' -e 's/ //g') ]
+  [ "_${name}" = "_$(git branch --list "${name}"|sed -e 's/\*//g' -e 's/ //g')" ]
 }
 
 mergable() {
