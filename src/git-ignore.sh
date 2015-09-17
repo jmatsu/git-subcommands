@@ -52,7 +52,7 @@ fetch_gitignore() {
 get_root() {
   local root_dir=$(git rev-parse --git-dir)
 
-  if [ "${root_dir%/*}" = "${root_dir}" ];
+  if [ "${root_dir%/*}" = "${root_dir}" ]; then
     root_dir=$(pwd)
   else
     root_dir="${root_dir%/*}"
