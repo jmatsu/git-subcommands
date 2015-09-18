@@ -50,7 +50,7 @@ check_filter_command() {
   [ -z "${cmd:-}" ] && {
     local msg msg2
     msg="The filter command is not set."
-    msg2="Please set by \`git config --add ignore.filter [peco|fzf|...]\`"
+    msg2="Please set by \`git config --add mine.filter [peco|fzf|...]\`"
     error "${msg}" "${msg2}"
   }
 
@@ -59,13 +59,13 @@ check_filter_command() {
   else
     local msg msg2
     msg="The filter command '${cmd}' not found."
-    msg2="Please set correct one by \`git config --add ignore.filter [peco|fzf|...]\`"
+    msg2="Please set correct one by \`git config --add mine.filter [peco|fzf|...]\`"
     error "${msg}" "${msg2}"
   fi
 }
 
 get_filter_command() {
-  git config --get ignore.filter 2> /dev/null
+  git config --get mine.filter 2> /dev/null
 }
 
 gitignore_api_call() {
