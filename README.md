@@ -1,2 +1,2 @@
 # git-subcommands
-Effective &amp; Convenience subcommands. 
+Effective &amp; Convenience subcommands.
