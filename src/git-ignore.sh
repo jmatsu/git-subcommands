@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 mktemp() {
-  \mktemp 2>/dev/null || \mktemp -t tmp
+  command mktemp 2>/dev/null || command mktemp -t tmp
 }
 
 ask() {
