@@ -76,22 +76,23 @@ fetch_gitignore_types() {
   gitignore_api_call "list"
 }
 
-fetch_gitignore() {
+select_langs() {
   check_filter_command
 
   local readonly cmd=$(get_filter_command)
-  local langs
 
-  langs=$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")
+  SELECTED_LANG=$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")
 
   echo 'Add another language?'
   while ask; do
-    langs="${langs},$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")"
+    SELECTED_LANG="${SELECTED_LANG},$(fetch_gitignore_types|tr "[:space:]" "\n"|awk 'NR>3{print $0;fflush()}'|"${cmd}")"
 
     echo 'Add another language?'
   done
+}
 
-  gitignore_api_call "${langs}"
+fetch_gitignore() {
+  gitignore_api_call "${SELECTED_LANG}"
 }
 
 get_root() {
@@ -107,10 +108,12 @@ get_root() {
 }
 
 create() {
+  select_langs
   fetch_gitignore > "$(get_root)/.gitignore"
 }
 
 append() {
+  select_langs
   fetch_gitignore >> "$(get_root)/.gitignore"
 }
 
