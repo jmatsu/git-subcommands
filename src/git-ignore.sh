@@ -69,11 +69,15 @@ get_filter_command() {
 }
 
 gitignore_api_call() {
+  curl -L -s "https://www.gitignore.io/api/$1"
+}
+
+gitignore_api_list_call() {
   curl -L -s "https://www.gitignore.io/api/$1"|tr "," "\n"
 }
 
 fetch_gitignore_types() {
-  gitignore_api_call "list"
+  gitignore_api_list_call "list"
 }
 
 select_langs() {
