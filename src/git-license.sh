@@ -241,13 +241,17 @@ gitlicense_api_call() {
 fetch_license() {
   check_filter_command
 
-  local readonly cmd=$(get_filter_command)
-  local readonly temp_file=$(mktemp)
+  local -r cmd=$(get_filter_command)
+  local -r temp_file=$(mktemp)
 
   gitlicense_api_call|tokenize|parse > "${temp_file}"
 
-  local readonly key=$(cat "${temp_file}"|grep '\[[0-9]*,"key"\]'|awk '$0=$2'|sed -e "s/\"//g"|${cmd})
-  [ $? -eq 0 ] && gitlicense_api_call "/${key}"
+  local -r key=$(cat "${temp_file}"|grep '\[[0-9]*,"key"\]'|awk '$0=$2'|sed -e "s/\"//g"|${cmd})
+
+  if [ $? -eq 0 ]; then
+    gitlicense_api_call "/${key}"|tokenize|parse > "${temp_file}"
+    eval echo -e $(cat "${temp_file}"|grep '\["body"\]'|cut -f2)
+  fi
 }
 
-fetch_license
+fetch_license > LICENSE
