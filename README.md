@@ -1,6 +1,16 @@
 # git-subcommands
 Effective &amp; Convenience subcommands.
 
+Under MIT LICENSE. ([here](https://raw.githubusercontent.com/jmatsu/git-subcommands/efadac18ee82f605579aefa247f4361ef9d7f8c0/LICENSE))
+
+# Notes
+
+Commands this contains would be not simple 'alias' but 'command' with help.
+
+# Others
+
++ [tj/git-extras](https://github.com/tj/git-extras).
+
 ## Ahead
 
 Show the information of 'Your branch is ahead of tracking branch by xxx commits.'
@@ -35,4 +45,8 @@ list : show all ignored patterns.
 ## License
 
 Fetch a license you specified via Github License api
+
+## Memo
+
+[git-memo](https://github.com/jmatsu/git-memo)
 
