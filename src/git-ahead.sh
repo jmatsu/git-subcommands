@@ -43,11 +43,11 @@ tracked() {
 }
 
 ahead() {
-  ahead::list
+  list
 }
 
 first() {
-  ahead::list|tail -1|sed 's/^<//'
+  list|tail -1|sed 's/^<//'
 }
 
 list() {
