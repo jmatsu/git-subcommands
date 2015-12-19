@@ -54,16 +54,20 @@ current() {
   git rev-parse --abbrev-ref HEAD
 }
 
+tracked() {
+  git rev-parse --abbrev-ref $(current)@{upstream}
+}
+
 exists() {
-  local name="$1"
+  local -r name="$1"
 
   [ "_${name}" = "_$(git branch --list "${name}"|sed -e 's/\*//g' -e 's/ //g')" ]
 }
 
 mergable() {
-  local readonly source_branch="$1"
-  local readonly current_branch=$(current)
-  local readonly temp_file=$(mktemp)
+  local -r source_branch="$1"
+  local -r current_branch=$(current)
+  local -r temp_file=$(mktemp)
 
   trap "rm -f ${temp_file}" 1 2 3 15
 
